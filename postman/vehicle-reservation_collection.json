@@ -56,7 +56,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"New User\",\n  \"email\": \"user@localhost\",\n  \"password\": \"user1234\",\n  \"role\": \"user\"\n}"
+              "raw": "{\n  \"name\": \"New User\",\n  \"email\": \"user@localhost.com\",\n  \"password\": \"user1234\",\n  \"role\": \"user\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/users",

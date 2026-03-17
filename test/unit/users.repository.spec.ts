@@ -2,9 +2,19 @@ import { NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../src/users/users.repository';
 
 class FakeModel {
-  static dataStore = [{ _id: '1', name: 'Test', email: 'test@localhost.com', password: 'hash', role: 'user' }];
+  static dataStore = [
+    {
+      _id: '1',
+      name: 'Test',
+      email: 'test@localhost.com',
+      password: 'hash',
+      role: 'user',
+    },
+  ];
   constructor(public value) {}
-  save = jest.fn().mockImplementation(async () => ({ _id: 'newid', ...this.value }));
+  save = jest
+    .fn()
+    .mockImplementation(async () => ({ _id: 'newid', ...this.value }));
 
   static find() {
     return {
@@ -14,7 +24,9 @@ class FakeModel {
 
   static findById(id) {
     const sample = FakeModel.dataStore.find((item) => item._id === id);
-    return { select: () => ({ exec: async () => (sample ? { ...sample } : null) }) };
+    return {
+      select: () => ({ exec: async () => (sample ? { ...sample } : null) }),
+    };
   }
 
   static findOne(obj) {
@@ -22,7 +34,7 @@ class FakeModel {
     return { exec: async () => (sample ? { ...sample } : null) };
   }
 
-  static findByIdAndUpdate(id, update, options) {
+  static findByIdAndUpdate(id, update) {
     const sample = FakeModel.dataStore.find((item) => item._id === id);
     if (!sample) return { select: () => ({ exec: async () => null }) };
     Object.assign(sample, update.$set);
@@ -36,7 +48,9 @@ class FakeModel {
     return { exec: async () => deleted };
   }
 
-  select() { return this; }
+  select() {
+    return this;
+  }
   exec = jest.fn().mockResolvedValue(FakeModel.dataStore);
 }
 
@@ -47,7 +61,12 @@ describe('UsersRepository', () => {
   });
 
   it('create returns saved document', async () => {
-    const result = await repository.create({ name: 'New', email: 'new@localhost.com', password: 'pwd', role: 'user' } as any);
+    const result = await repository.create({
+      name: 'New',
+      email: 'new@localhost.com',
+      password: 'pwd',
+      role: 'user',
+    } as any);
     expect(result).toHaveProperty('_id', 'newid');
   });
 
@@ -68,7 +87,9 @@ describe('UsersRepository', () => {
   });
 
   it('update throws not found for missing id', async () => {
-    await expect(repository.update('missing', { name: 'No' } as any)).rejects.toThrow(NotFoundException);
+    await expect(
+      repository.update('missing', { name: 'No' } as any),
+    ).rejects.toThrow(NotFoundException);
   });
 
   it('update should return updated user for existing id', async () => {
@@ -87,6 +108,8 @@ describe('UsersRepository', () => {
   });
 
   it('delete throws not found for missing id', async () => {
-    await expect(repository.delete('missing')).rejects.toThrow(NotFoundException);
+    await expect(repository.delete('missing')).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });

@@ -9,7 +9,9 @@ describe('JwtAuthGuard', () => {
 
   it('canActivate should call parent implementation', () => {
     const parentGuard = AuthGuard('jwt');
-    const spy = jest.spyOn(parentGuard.prototype, 'canActivate').mockReturnValue(true as any);
+    const spy = jest
+      .spyOn(parentGuard.prototype, 'canActivate')
+      .mockReturnValue(true as any);
     const guard = new JwtAuthGuard();
     const result = guard.canActivate({} as any);
     expect(spy).toHaveBeenCalled();

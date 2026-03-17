@@ -9,7 +9,9 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
-    const existing = await this.usersRepository.findByEmail(createUserDto.email);
+    const existing = await this.usersRepository.findByEmail(
+      createUserDto.email,
+    );
     if (existing) {
       throw new ConflictException('Email already in use');
     }

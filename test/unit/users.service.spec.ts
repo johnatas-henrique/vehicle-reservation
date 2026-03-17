@@ -38,7 +38,11 @@ describe('UsersService', () => {
   });
 
   it('should create user', async () => {
-    const user = await service.create({ name: 'Example', email: 'test@example.com', password: '123456' });
+    const user = await service.create({
+      name: 'Example',
+      email: 'test@example.com',
+      password: '123456',
+    });
     expect(user).toEqual(userMock);
     expect(repository.findByEmail).toHaveBeenCalledWith('test@example.com');
   });
@@ -46,7 +50,11 @@ describe('UsersService', () => {
   it('should throw when duplicate email', async () => {
     (repository.findByEmail as jest.Mock).mockResolvedValue(userMock);
     await expect(
-      service.create({ name: 'Example', email: 'test@example.com', password: '123456' } as any),
+      service.create({
+        name: 'Example',
+        email: 'test@example.com',
+        password: '123456',
+      } as any),
     ).rejects.toThrow(ConflictException);
   });
 

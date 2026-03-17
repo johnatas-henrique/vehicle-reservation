@@ -6,7 +6,7 @@ describe('Roles Decorator', () => {
   it('should set roles metadata on handler', () => {
     class TestClass {
       @Roles(Role.Admin)
-      method() {}
+      method(this: void) {}
     }
 
     const roles = Reflect.getMetadata('roles', TestClass.prototype.method);

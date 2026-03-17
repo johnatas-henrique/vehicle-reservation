@@ -26,12 +26,19 @@ describe('Auth + Users Integration (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+    );
     await app.init();
 
     const usersRepo = app.get<UsersRepository>(UsersRepository);
     try {
-      await usersRepo.create({ name: 'Admin Seed', email: adminEmail, password: 'admin123', role: Role.Admin });
+      await usersRepo.create({
+        name: 'Admin Seed',
+        email: adminEmail,
+        password: 'admin123',
+        role: Role.Admin,
+      });
     } catch (err) {
       if (!err?.code || err.code !== 11000) {
         throw err;
@@ -60,7 +67,12 @@ describe('Auth + Users Integration (e2e)', () => {
     const res = await request(app.getHttpServer())
       .post('/users')
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({ name: 'Regular User', email: userEmail, password: 'user1234', role: Role.User });
+      .send({
+        name: 'Regular User',
+        email: userEmail,
+        password: 'user1234',
+        role: Role.User,
+      });
 
     expect(res.status).toBe(201);
     expect(res.body.email).toBe(userEmail);
@@ -80,7 +92,12 @@ describe('Auth + Users Integration (e2e)', () => {
     const res = await request(app.getHttpServer())
       .post('/users')
       .set('Authorization', `Bearer ${userToken}`)
-      .send({ name: 'Another', email: 'newuser@localhost', password: 'new1234', role: Role.User });
+      .send({
+        name: 'Another',
+        email: 'newuser@localhost',
+        password: 'new1234',
+        role: Role.User,
+      });
 
     expect(res.status).toBe(403);
   });
@@ -99,7 +116,12 @@ describe('Auth + Users Integration (e2e)', () => {
     const another = await request(app.getHttpServer())
       .post('/users')
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({ name: 'Another User', email: anotherEmail, password: 'another1234', role: Role.User });
+      .send({
+        name: 'Another User',
+        email: anotherEmail,
+        password: 'another1234',
+        role: Role.User,
+      });
 
     expect(another.status).toBe(201);
 

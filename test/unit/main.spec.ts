@@ -12,7 +12,10 @@ describe('main bootstrap', () => {
       enableCors: jest.fn(),
       init: jest.fn().mockResolvedValue(null),
       listen: jest.fn().mockResolvedValue(null),
-      get: jest.fn().mockReturnValue({ findByEmail: jest.fn().mockResolvedValue(null), create: jest.fn().mockResolvedValue(true) }),
+      get: jest.fn().mockReturnValue({
+        findByEmail: jest.fn().mockResolvedValue(null),
+        create: jest.fn().mockResolvedValue(true),
+      }),
     };
 
     jest.doMock('@nestjs/core', () => ({
@@ -24,7 +27,7 @@ describe('main bootstrap', () => {
     await jest.isolateModulesAsync(async () => {
       process.env.ADMIN_EMAIL = 'admin@localhost.com';
       process.env.ADMIN_PASSWORD = 'admin123';
-      process.env.PORT = '0';
+      process.env.PORT = '3000';
       // load module and execute bootstrap
       require('../../src/main');
     });

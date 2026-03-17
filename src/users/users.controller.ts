@@ -47,7 +47,11 @@ export class UsersController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Request() req) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Request() req,
+  ) {
     const requester = req.user;
     if (requester.role !== Role.Admin && requester.sub !== id) {
       throw new ForbiddenException('You can update only your own account');
