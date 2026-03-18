@@ -6,6 +6,7 @@ import {
   IsIn,
   IsOptional,
   IsBoolean,
+  IsUrl,
 } from 'class-validator';
 import { VEHICLE_BODYWORK, VEHICLE_ENGINE } from '../schemas/vehicle.schema';
 
@@ -37,4 +38,9 @@ export class CreateVehicleDto {
   @IsOptional()
   @IsString()
   inactiveReason?: string | null;
+
+  @IsOptional()
+  @IsString()
+  @IsUrl()
+  imageUrl?: string | null;
 }

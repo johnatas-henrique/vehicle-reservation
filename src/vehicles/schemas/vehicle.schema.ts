@@ -8,7 +8,18 @@ export const VEHICLE_BODYWORK = [
   'Hatch médio',
   'SUV compacto',
   'SUV médio',
+  'SUV grande',
+  'Crossover',
   'Coupé',
+  'Picape leve',
+  'Picape leve-média',
+  'Picape média',
+  'Sedan compacto',
+  'Sedan médio',
+  'Sedan grande',
+  'Minivan',
+  'Utilitário leve',
+  'Utilitário',
 ] as const;
 
 export const VEHICLE_ENGINE = [
@@ -41,6 +52,9 @@ export class Vehicle {
 
   @Prop({ type: String, default: null, nullable: true })
   inactiveReason: string | null;
+
+  @Prop({ type: String, default: null, nullable: true })
+  imageUrl: string | null;
 }
 
 export const VehicleSchema = SchemaFactory.createForClass(Vehicle);
