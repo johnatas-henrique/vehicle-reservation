@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals';
+import { ConfigService } from '@nestjs/config';
 
 describe('main bootstrap', () => {
   afterEach(() => {
@@ -25,6 +26,7 @@ describe('main bootstrap', () => {
     }));
 
     await jest.isolateModulesAsync(async () => {
+      process.env.NODE_ENV = 'development';
       process.env.ADMIN_EMAIL = 'admin@localhost.com';
       process.env.ADMIN_PASSWORD = 'admin123';
       process.env.PORT = '3000';
@@ -36,5 +38,67 @@ describe('main bootstrap', () => {
     expect(mockApp.enableCors).toHaveBeenCalled();
     expect(mockApp.init).toHaveBeenCalled();
     expect(mockApp.listen).toHaveBeenCalled();
+  });
+
+  it('seedAdmin returns early in test environment', async () => {
+    const app = { get: jest.fn().mockReturnValue(undefined) } as any;
+    jest.resetModules();
+    process.env.NODE_ENV = 'test';
+
+    const { seedAdmin } = require('../../src/main');
+    await expect(seedAdmin(app)).resolves.toBeUndefined();
+    expect(app.get).toHaveBeenCalledWith(expect.anything(), { strict: false });
+  });
+
+  it('seedAdmin creates admin if not exists', async () => {
+    const create = jest.fn().mockResolvedValue(true);
+    const repo = { findByEmail: jest.fn().mockResolvedValue(null), create };
+    const app = {
+      get: jest.fn((token) =>
+        token === 'ConfigService'
+          ? { get: () => undefined }
+          : repo,
+      ),
+    } as any;
+
+    jest.resetModules();
+    process.env.NODE_ENV = 'test';
+    const { seedAdmin } = require('../../src/main');
+
+    process.env.NODE_ENV = 'development';
+    process.env.ADMIN_EMAIL = 'admin@localhost.com';
+    process.env.ADMIN_PASSWORD = 'admin123';
+
+    await seedAdmin(app);
+    expect(repo.findByEmail).toHaveBeenCalledWith('admin@localhost.com');
+    expect(create).toHaveBeenCalledWith({
+      name: 'Admin',
+      email: 'admin@localhost.com',
+      password: 'admin123',
+      role: 'admin',
+    });
+  });
+
+  it('seedAdmin does not create admin if exists', async () => {
+    const repo = { findByEmail: jest.fn().mockResolvedValue({ _id: '1' }), create: jest.fn() };
+    const app = {
+      get: jest.fn((token) =>
+        token === 'ConfigService'
+          ? { get: () => undefined }
+          : repo,
+      ),
+    } as any;
+
+    jest.resetModules();
+    process.env.NODE_ENV = 'test';
+    const { seedAdmin } = require('../../src/main');
+
+    process.env.NODE_ENV = 'development';
+    process.env.ADMIN_EMAIL = 'admin@localhost.com';
+    process.env.ADMIN_PASSWORD = 'admin123';
+
+    await seedAdmin(app);
+    expect(repo.findByEmail).toHaveBeenCalledWith('admin@localhost.com');
+    expect(repo.create).not.toHaveBeenCalled();
   });
 });

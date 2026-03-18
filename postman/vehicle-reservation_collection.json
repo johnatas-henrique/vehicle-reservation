@@ -99,6 +99,143 @@
           }
         }
       ]
+    },
+    {
+      "name": "Vehicles",
+      "item": [
+        {
+          "name": "Create vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fiesta\",\n  \"year\": 2018,\n  \"bodywork\": \"Hatch compacto\",\n  \"engine\": \"Motor 1.0\",\n  \"seats\": 5,\n  \"active\": true,\n  \"inactiveReason\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vehicles",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Get vehicles",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vehicles",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Update vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"active\": false,\n  \"inactiveReason\": \"maintenance\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vehicles/{{vehicle_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles", "{{vehicle_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete vehicle",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vehicles/{{vehicle_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles", "{{vehicle_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "Create reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"vehicleId\": \"{{vehicle_id}}\",\n  \"startedAt\": \"2026-01-01T00:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reservations",
+              "host": ["{{base_url}}"],
+              "path": ["reservations"]
+            }
+          }
+        },
+        {
+          "name": "Get reservations by user",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reservations/user/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["reservations", "user", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Cancel reservation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reservations/{{reservation_id}}/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["reservations", "{{reservation_id}}", "cancel"]
+            }
+          }
+        },
+        {
+          "name": "Finish reservation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reservations/{{reservation_id}}/finish",
+              "host": ["{{base_url}}"],
+              "path": ["reservations", "{{reservation_id}}", "finish"]
+            }
+          }
+        }
+      ]
     }
   ]
 }

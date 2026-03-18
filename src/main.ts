@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import { UsersRepository } from './users/users.repository';
 import { Role } from './common/enums/role.enum';
 
-async function seedAdmin(app: INestApplication) {
+export async function seedAdmin(app: INestApplication) {
   const configService = app.get<ConfigService>(ConfigService, {
     strict: false,
   });
@@ -32,7 +32,7 @@ async function seedAdmin(app: INestApplication) {
   }
 }
 
-async function bootstrap() {
+export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
@@ -45,4 +45,6 @@ async function bootstrap() {
   await app.listen(Number(process.env.PORT) || 3000);
 }
 
-void bootstrap();
+if (process.env.NODE_ENV !== 'test') {
+  void bootstrap();
+}
