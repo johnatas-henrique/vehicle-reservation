@@ -1,4 +1,8 @@
-import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReservationsService } from '../../src/reservations/reservations.service';
 import { ReservationsRepository } from '../../src/reservations/reservations.repository';
@@ -45,11 +49,15 @@ describe('ReservationsService', () => {
   });
 
   it('reserve works when no conflicts', async () => {
-    const usersRepo = (service as any).usersRepository as Partial<UsersRepository>;
-    const vehiclesRepo = (service as any).vehiclesRepository as Partial<VehiclesRepository>;
+    const usersRepo = (service as any)
+      .usersRepository as Partial<UsersRepository>;
+    const vehiclesRepo = (service as any)
+      .vehiclesRepository as Partial<VehiclesRepository>;
 
     usersRepo.findById = jest.fn().mockResolvedValue({ _id: 'u1' });
-    vehiclesRepo.findById = jest.fn().mockResolvedValue({ _id: 'v1', active: true });
+    vehiclesRepo.findById = jest
+      .fn()
+      .mockResolvedValue({ _id: 'v1', active: true });
 
     (repository.findActiveByUser as jest.Mock).mockResolvedValue(null);
     (repository.findActiveByVehicle as jest.Mock).mockResolvedValue(null);
@@ -64,47 +72,73 @@ describe('ReservationsService', () => {
   });
 
   it('reserve fails when user does not exist', async () => {
-    const usersRepo = (service as any).usersRepository as Partial<UsersRepository>;
-    const vehiclesRepo = (service as any).vehiclesRepository as Partial<VehiclesRepository>;
+    const usersRepo = (service as any)
+      .usersRepository as Partial<UsersRepository>;
+    const vehiclesRepo = (service as any)
+      .vehiclesRepository as Partial<VehiclesRepository>;
 
     usersRepo.findById = jest.fn().mockResolvedValue(null);
-    vehiclesRepo.findById = jest.fn().mockResolvedValue({ _id: 'v1', active: true });
+    vehiclesRepo.findById = jest
+      .fn()
+      .mockResolvedValue({ _id: 'v1', active: true });
 
     await expect(
-      service.reserve({ userId: 'u-not-exists', vehicleId: 'v1', startedAt: '2025-01-01T00:00:00Z' } as any),
+      service.reserve({
+        userId: 'u-not-exists',
+        vehicleId: 'v1',
+        startedAt: '2025-01-01T00:00:00Z',
+      } as any),
     ).rejects.toThrow(NotFoundException);
   });
 
   it('reserve fails when vehicle does not exist', async () => {
-    const usersRepo = (service as any).usersRepository as Partial<UsersRepository>;
-    const vehiclesRepo = (service as any).vehiclesRepository as Partial<VehiclesRepository>;
+    const usersRepo = (service as any)
+      .usersRepository as Partial<UsersRepository>;
+    const vehiclesRepo = (service as any)
+      .vehiclesRepository as Partial<VehiclesRepository>;
 
     usersRepo.findById = jest.fn().mockResolvedValue({ _id: 'u1' });
     vehiclesRepo.findById = jest.fn().mockResolvedValue(null);
 
     await expect(
-      service.reserve({ userId: 'u1', vehicleId: 'v-not-exists', startedAt: '2025-01-01T00:00:00Z' } as any),
+      service.reserve({
+        userId: 'u1',
+        vehicleId: 'v-not-exists',
+        startedAt: '2025-01-01T00:00:00Z',
+      } as any),
     ).rejects.toThrow(NotFoundException);
   });
 
   it('reserve fails when vehicle is inactive', async () => {
-    const usersRepo = (service as any).usersRepository as Partial<UsersRepository>;
-    const vehiclesRepo = (service as any).vehiclesRepository as Partial<VehiclesRepository>;
+    const usersRepo = (service as any)
+      .usersRepository as Partial<UsersRepository>;
+    const vehiclesRepo = (service as any)
+      .vehiclesRepository as Partial<VehiclesRepository>;
 
     usersRepo.findById = jest.fn().mockResolvedValue({ _id: 'u1' });
-    vehiclesRepo.findById = jest.fn().mockResolvedValue({ _id: 'v1', active: false });
+    vehiclesRepo.findById = jest
+      .fn()
+      .mockResolvedValue({ _id: 'v1', active: false });
 
     await expect(
-      service.reserve({ userId: 'u1', vehicleId: 'v1', startedAt: '2025-01-01T00:00:00Z' } as any),
+      service.reserve({
+        userId: 'u1',
+        vehicleId: 'v1',
+        startedAt: '2025-01-01T00:00:00Z',
+      } as any),
     ).rejects.toThrow(BadRequestException);
   });
 
   it('reserve fails when user has active', async () => {
-    const usersRepo = (service as any).usersRepository as Partial<UsersRepository>;
-    const vehiclesRepo = (service as any).vehiclesRepository as Partial<VehiclesRepository>;
+    const usersRepo = (service as any)
+      .usersRepository as Partial<UsersRepository>;
+    const vehiclesRepo = (service as any)
+      .vehiclesRepository as Partial<VehiclesRepository>;
 
     usersRepo.findById = jest.fn().mockResolvedValue({ _id: 'u1' });
-    vehiclesRepo.findById = jest.fn().mockResolvedValue({ _id: 'v1', active: true });
+    vehiclesRepo.findById = jest
+      .fn()
+      .mockResolvedValue({ _id: 'v1', active: true });
 
     (repository.findActiveByUser as jest.Mock).mockResolvedValue({});
 
@@ -118,11 +152,15 @@ describe('ReservationsService', () => {
   });
 
   it('reserve fails when vehicle is already reserved', async () => {
-    const usersRepo = (service as any).usersRepository as Partial<UsersRepository>;
-    const vehiclesRepo = (service as any).vehiclesRepository as Partial<VehiclesRepository>;
+    const usersRepo = (service as any)
+      .usersRepository as Partial<UsersRepository>;
+    const vehiclesRepo = (service as any)
+      .vehiclesRepository as Partial<VehiclesRepository>;
 
     usersRepo.findById = jest.fn().mockResolvedValue({ _id: 'u1' });
-    vehiclesRepo.findById = jest.fn().mockResolvedValue({ _id: 'v1', active: true });
+    vehiclesRepo.findById = jest
+      .fn()
+      .mockResolvedValue({ _id: 'v1', active: true });
 
     (repository.findActiveByUser as jest.Mock).mockResolvedValue(null);
     (repository.findActiveByVehicle as jest.Mock).mockResolvedValue({});
@@ -187,7 +225,9 @@ describe('ReservationsService', () => {
   it('cancel fails when reservation not found', async () => {
     (repository.findById as jest.Mock).mockResolvedValue(null);
 
-    await expect(service.cancel('resMissing', { sub: 'u1', role: 'user' } as any)).rejects.toThrow(NotFoundException);
+    await expect(
+      service.cancel('resMissing', { sub: 'u1', role: 'user' } as any),
+    ).rejects.toThrow(NotFoundException);
   });
 
   it('cancel fails when reservation inactive', async () => {
@@ -197,13 +237,17 @@ describe('ReservationsService', () => {
       status: 'finished',
     });
 
-    await expect(service.cancel('res1', { sub: 'u1', role: 'user' } as any)).rejects.toThrow(BadRequestException);
+    await expect(
+      service.cancel('res1', { sub: 'u1', role: 'user' } as any),
+    ).rejects.toThrow(BadRequestException);
   });
 
   it('finish fails when reservation not found', async () => {
     (repository.findById as jest.Mock).mockResolvedValue(null);
 
-    await expect(service.finish('resMissing', { sub: 'u1', role: 'user' } as any)).rejects.toThrow(NotFoundException);
+    await expect(
+      service.finish('resMissing', { sub: 'u1', role: 'user' } as any),
+    ).rejects.toThrow(NotFoundException);
   });
 
   it('finish fails when reservation inactive', async () => {
@@ -213,7 +257,9 @@ describe('ReservationsService', () => {
       status: 'cancelled',
     });
 
-    await expect(service.finish('res1', { sub: 'u1', role: 'user' } as any)).rejects.toThrow(BadRequestException);
+    await expect(
+      service.finish('res1', { sub: 'u1', role: 'user' } as any),
+    ).rejects.toThrow(BadRequestException);
   });
 
   it('get by user returns all', async () => {

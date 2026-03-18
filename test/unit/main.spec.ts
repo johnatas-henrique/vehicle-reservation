@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals';
-import { ConfigService } from '@nestjs/config';
 import { UsersRepository } from '../../src/users/users.repository';
 import { VehiclesRepository } from '../../src/vehicles/vehicles.repository';
 
@@ -33,7 +32,10 @@ describe('main bootstrap', () => {
         if (token === UsersRepository || tokenName === 'UsersRepository') {
           return usersRepo;
         }
-        if (token === VehiclesRepository || tokenName === 'VehiclesRepository') {
+        if (
+          token === VehiclesRepository ||
+          tokenName === 'VehiclesRepository'
+        ) {
           return vehiclesRepo;
         }
         return undefined;
@@ -80,9 +82,7 @@ describe('main bootstrap', () => {
     const repo = { findByEmail: jest.fn().mockResolvedValue(null), create };
     const app = {
       get: jest.fn((token) =>
-        token === 'ConfigService'
-          ? { get: () => undefined }
-          : repo,
+        token === 'ConfigService' ? { get: () => undefined } : repo,
       ),
     } as any;
 
@@ -105,12 +105,13 @@ describe('main bootstrap', () => {
   });
 
   it('seedAdmin does not create admin if exists', async () => {
-    const repo = { findByEmail: jest.fn().mockResolvedValue({ _id: '1' }), create: jest.fn() };
+    const repo = {
+      findByEmail: jest.fn().mockResolvedValue({ _id: '1' }),
+      create: jest.fn(),
+    };
     const app = {
       get: jest.fn((token) =>
-        token === 'ConfigService'
-          ? { get: () => undefined }
-          : repo,
+        token === 'ConfigService' ? { get: () => undefined } : repo,
       ),
     } as any;
 

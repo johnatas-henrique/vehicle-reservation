@@ -32,7 +32,9 @@ export class ReservationsService {
     }
 
     if (!vehicle.active) {
-      throw new BadRequestException('Vehicle is inactive and cannot be reserved');
+      throw new BadRequestException(
+        'Vehicle is inactive and cannot be reserved',
+      );
     }
 
     const userHasActive =
